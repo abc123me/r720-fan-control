@@ -14,10 +14,16 @@ Contains a systemd service for this as well
 
 ## Updating / Installation (recommended, optional)
 
-The provided installer script `./install.sh` will do the following:
+Install / Update with `./install.sh`
+
+A fresh install will do the following:
  1. Create a dedicated fan control user/group (fanctrl/fanctrl)
- 2. Install the systemd service and utility into /opt
+ 2. Install the systemd service and utility into /usr/share/r720-fan-control
  3. Enable and start the systemd service
+
+## Configuration
+
+See `/usr/share/r720-fan-control/config.sh`
 
 ## Removal
 
@@ -44,7 +50,12 @@ The `fan-control.service` file consists of a simple systemd service that will
 start after `network.target` is reached, and auto-restart after 10 seconds if
 an error is encountered.
 
-## Responsibility
+## Reliabilty and security
 
-This software is not designed for security, or reliability. By using this
+This software is not designed for security or reliability. By using this
 software you are accepting the risk of any damages caused by said software.
+
+IPMI is inheriently not secure, I did put some effort to at least
+add some basic permissions to help hide the username / password in the
+configuration file used. The username and password will also be replaced
+with `<hidden>` in the system log as well.

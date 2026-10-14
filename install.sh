@@ -13,11 +13,11 @@ vs() { if [ $UID -ne 0 ]; then v "${SUDO:-sudo}" "$@"; else v "$@"; fi; }
 # Change these at your own risk, should also be changed in .service file
 INSTALL_PATH="/usr/share/r720-fan-control"
 
-if cat /etc/passwd | grep -qE 'fanctrl:x:[0-9]+:[0-9]+:fanctrl'; then
+if cat /etc/passwd | grep -qE '^fanctrl:'; then
 	echo "Fan control user already exists, not making one!"
 else
 	echo "Making a fan control user (fanctrl) and setting up base directory!"
-	vs useradd -M -d /nonexistent -s /usr/sbin/nologin -c "Fan control daemon" fanctrl
+	vs useradd -U -M -d /nonexistent -s /usr/sbin/nologin -c "Fan control daemon" fanctrl
 	vs mkdir -pv "${INSTALL_PATH}"
 	vs chown root:root "${INSTALL_PATH}"
 fi

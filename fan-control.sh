@@ -15,7 +15,7 @@ IPMI_CMD+=("-U" "${IPMI_USER}")
 IPMI_CMD+=("-P" "${IPMI_PASS}")
 IPMI_CMD+=("raw" "0x30" "0x30")
 
-v() { echo "$@"; "$@"; }
+v() { clargs=(); for arg in "$@"; do if [ "$arg" == "${IPMI_PASS}" ] || [ "$arg" == "${IPMI_USER}" ]; then clargs+=("<hidden>"); else clargs+=("$arg"); fi; done; echo "${clargs[@]}"; "$@"; }
 
 fans=0; while true; do
 	# Check all GPU temperatures
