@@ -59,3 +59,56 @@ IPMI is inheriently not secure, I did put some effort to at least
 add some basic permissions to help hide the username / password in the
 configuration file used. The username and password will also be replaced
 with `<hidden>` in the system log as well.
+
+## Testing / Benchmarking
+
+### Hardware configuration
+
+ - Dell Poweredge R720 running Proxmox 8.3 w/ 32x Intel(R) Xeon(R) CPU E5-2667 v2 @ 3.30GHz and 384GB of RAM
+ - VM is on SSD storage, w/ 8 host NUMA aware cores, 32GB of RAM, Q35 BIOS
+ - Tesla V100 in slot 04:00 has pass-through w/ all-features and BAR support
+ - Positioned in slot opver power supplies for optimal airflow in server
+
+### Software configuration
+
+```sh
+POST /v1/images/generations
+{
+  "model": "Z-Image-Turbo",
+  "prompt": "Anime style girl sipping tea while sitting on a chair that is positioned in the middle of a burning datacenter. With the this is fine text on the bottom.",
+  "n": 1,
+  "size": "1024x1024",
+  "seed": 1337
+}
+```
+
+Endpoint served via the LocalAI stablediffusion-ggml backend (model was already loaded in VRAM for all tests)
+
+### Results
+
+Fan control             | Time    | Core clock | Memory clock | Temperature | Power  | Fan RPM
+------------------------|---------|------------|--------------|-------------|--------|------------
+Disabled with no load   | N\A     | 1260 MHz   | 1107 MHz     | 47 C        | 41 W   | ~4000 RPM
+Disabled with full load | 3:28.98 | 375 MHz    | 1107 MHz     | 82 C        | 71 W   | ~4000 RPM
+Enabled with full load  | 1:08:12 | 1275 MHz   | 1107 MHz     | 78 C        | 226 W  | ~12700 RPM
+
+#### System running without fan control
+
+![Disabled with full load](assets/fan_control_off.png)
+
+#### System running with fan control
+
+![Enabled with full load](assets/fan_control_on.png)
+
+#### Generated image
+
+![Image generation result](assets/benchmark.png)
+
+## Versions / Tags
+
+ - v1.0
+   - Initial release
+ - v1.1
+   - Wait for network.target in systemd service
+   - Added benchmark / testing results to documentation
+
