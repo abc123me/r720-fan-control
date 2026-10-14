@@ -1,0 +1,14 @@
+[Unit]
+Description=Fan Speed Control Service
+
+[Service]
+Type=simple
+ExecStart=/usr/share/r720-fan-control/fan-control.sh
+WorkingDirectory=/usr/share/r720-fan-control
+User=fanctrl
+Group=fanctrl
+Restart=always
+RestartSec=30s
+
+[Install]
+WantedBy=multi-user.target
